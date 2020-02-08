@@ -14,18 +14,18 @@ namespace DefaultNamespace
             public int sizeY;
         }
 
-        private Func<int, int, int, int, bool> mIsSameTileCallback;
-        private Func<int, int, bool> mIsHaveTileCallback;
+        private static Func<int, int, int, int, bool> mIsSameTileCallback;
+        private static Func<int, int, bool> mIsHaveTileCallback;
 
         /// <summary>
         /// 已经处理过的TileBlock标记为True
         /// </summary>
-        private bool[,] mProcessedArea;
+        private static bool[,] mProcessedArea;
 
-        private List<GreedyOptimizeResultTileInfo> mResultList;
+        private static List<GreedyOptimizeResultTileInfo> mResultList;
 
-        private int mMaxSizeX;
-        private int mMaxSizeY;
+        private static int mMaxSizeX;
+        private static int mMaxSizeY;
 
         /// <summary>
         /// 使用Greedy算法 优化一个虚拟的二维的区域:  (0,0) - (sizeX,sizeY)
@@ -38,7 +38,7 @@ namespace DefaultNamespace
         /// <param name="_isSameTileCallback"> bool IsSameTile(int _aIndexX,int _aIndexY,int _bIndexX,int _bIndexY)</param>
         /// <param name="_isHaveTileCallback">bool IsHaveTile(int _tileX,int _tileY,)</param>
         /// <returns></returns>
-        public List<GreedyOptimizeResultTileInfo> Optimize(int _sizeX, int _sizeY, Func<int, int, int, int, bool> _isSameTileCallback, Func<int, int, bool> _isHaveTileCallback)
+        public static List<GreedyOptimizeResultTileInfo> Optimize(int _sizeX, int _sizeY, Func<int, int, int, int, bool> _isSameTileCallback, Func<int, int, bool> _isHaveTileCallback)
         {
             mResultList = new List<GreedyOptimizeResultTileInfo>();
             mProcessedArea = new bool[_sizeX, _sizeY];
@@ -58,7 +58,7 @@ namespace DefaultNamespace
         }
 
 
-        private void DoProcessTile(int _x, int _y)
+        private static void DoProcessTile(int _x, int _y)
         {
             if (mProcessedArea[_x, _y] || !mIsHaveTileCallback(_x, _y)) return; //当前位置已经被处理过了,或者当前位置没有Tile
 
@@ -97,7 +97,7 @@ namespace DefaultNamespace
         /// 如果 _searchY == _startY 则MaxX 最小为_startX 表示其自己
         /// 否则 MaxX 最小值为-1,表示不存在
         /// </summary>
-        private int FindSameTileMaxX(int _startX, int _startY, int _searchY, int _maxSearchX)
+        private static int FindSameTileMaxX(int _startX, int _startY, int _searchY, int _maxSearchX)
         {
             var maxX = -1;
             for (var nowX = _startX; nowX <= _maxSearchX; nowX++)
