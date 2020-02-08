@@ -60,15 +60,16 @@ namespace DefaultNamespace
 
         private void DoProcessTile(int _x, int _y)
         {
-            if (mProcessedArea[_x, _y]) return; //当前位置已经被处理过了
+            if (mProcessedArea[_x, _y] || !mIsHaveTileCallback(_x, _y)) return; //当前位置已经被处理过了,或者当前位置没有Tile
 
             //找寻当前行的最大值,最小值也为 _x 自身
             var maxX = FindSameTileMaxX(_x, _y, _y, mMaxSizeX - 1); // _x <= $value <= maxX || $value < 0 NotFound
+            maxX = Mathf.Max(_x, maxX); //MaxX最小值为自身,因为上面结果会返回-1 表示当前Tile是该行唯一一个
 
             var maxY = _y; //// _y <= $valueY <= maxY
 
             //纵向找寻最大的Y值,因为不同行,所以最小值为 -1
-            for (var nowY = _y + 1; nowY <= mMaxSizeY - 1; nowY++)
+            for (var nowY = _y + 1; nowY < mMaxSizeY; nowY++)
             {
                 if (FindSameTileMaxX(_x, _y, nowY, maxX) < maxX) break; // _x <= $value <= maxX || $value < 0 NotFound
                 maxY = nowY;
@@ -94,7 +95,7 @@ namespace DefaultNamespace
         /// <summary>
         /// 在Y=_searchY 这条线上,找寻从_startX 到 _maxSearchX 区域之间 和 Tile(_startX,_startY) 相同的Tile X最大值
         /// 如果 _searchY == _startY 则MaxX 最小为_startX 表示其自己
-        /// 否则 MaxY 最小值为-1,表示不存在
+        /// 否则 MaxX 最小值为-1,表示不存在
         /// </summary>
         private int FindSameTileMaxX(int _startX, int _startY, int _searchY, int _maxSearchX)
         {
